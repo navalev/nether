@@ -46,7 +46,7 @@ namespace Nether.Analytics.EventProcessor
 
             // Run and block
             var host = new JobHost(jobHostConfig);
-            host.RunAndBlock();            
+            host.RunAndBlock();
         }
     }
 }
