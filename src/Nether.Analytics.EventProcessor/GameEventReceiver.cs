@@ -43,7 +43,7 @@ namespace Nether.Analytics.EventProcessor
             _blobOutputManager = new BlobOutputManager(
                 outputStorageAccountConnectionString,
                 outputContainer,
-                BlobOutputFolderStructure.YearMonthDayHour,
+                BlobOutputFolderStructure.YearMonthDay,
                 100 * 1024 * 1024); // 100MB
 
             // Configure EventHub Output

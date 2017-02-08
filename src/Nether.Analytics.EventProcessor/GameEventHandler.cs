@@ -127,7 +127,7 @@ namespace Nether.Analytics.EventProcessor
         /// <returns>A combined and versioned name</returns>
         public static string VersionedName(string gameEventType, string version)
         {
-            return $"{gameEventType}|{version}";
+            return $"{gameEventType}/v{version}";
         }
 
 
