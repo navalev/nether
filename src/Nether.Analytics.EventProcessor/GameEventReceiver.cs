@@ -70,7 +70,7 @@ namespace Nether.Analytics.EventProcessor
             s_router.RegEventTypeAction("stop", "1.0.0", handler.HandleStopEvent);
             s_router.RegEventTypeAction("generic", "1.0.0", handler.HandleGenericEvent);
         }
-        
+
         //public void HandleOne([EventHubTrigger("%NETHER_INGEST_EVENTHUB_NAME%")] string data)
         //{
         //    //TODO: Figure out how to configure above EventHubName now named ingest

@@ -29,7 +29,7 @@ namespace Nether.Analytics.EventProcessor
         }
 
         private static JobHostConfiguration Configure()
-        {  
+        {
             //TODO: Make all configuration work in the same way across Nether
             Console.WriteLine("Configuring WebJob (from Environment Variables");
 
@@ -76,6 +76,5 @@ namespace Nether.Analytics.EventProcessor
             Console.WriteLine(@"- Analytics Event Processor -");
             Console.WriteLine();
         }
-        
     }
 }
