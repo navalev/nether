@@ -71,7 +71,7 @@ namespace Nether.Analytics.EventProcessor
         }
 
 
-        //public void HandleOne([EventHubTrigger("ingest")] string data)
+        //public void HandleOne([EventHubTrigger("%NETHER_INGEST_EVENTHUB_NAME%")] string data)
         //{
         //    //TODO: Figure out how to configure above EventHubName now named ingest
 
@@ -79,7 +79,7 @@ namespace Nether.Analytics.EventProcessor
         //    _router.HandleGameEvent(data);
         //}
 
-        public static void HandleBatch([EventHubTrigger("ingest")] string[] events)
+        public static void HandleBatch([EventHubTrigger("%NETHER_INGEST_EVENTHUB_NAME%")] string[] events)
         {
             if (events.Length > 1)
                 Console.WriteLine($"....Received batch of {events.Length} events");
