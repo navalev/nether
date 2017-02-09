@@ -2,11 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Azure.WebJobs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Nether.Analytics.EventProcessor
 {
@@ -14,7 +10,7 @@ namespace Nether.Analytics.EventProcessor
     {
         public string Resolve(string name)
         {
-            return Environment.GetEnvironmentVariable(name);
+            return ConfigResolver.Resolve(name);
         }
     }
 }

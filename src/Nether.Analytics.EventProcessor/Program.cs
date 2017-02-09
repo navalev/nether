@@ -4,6 +4,7 @@
 using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.ServiceBus;
+using System.Configuration;
 
 namespace Nether.Analytics.EventProcessor
 {
@@ -28,22 +29,19 @@ namespace Nether.Analytics.EventProcessor
         }
 
         private static JobHostConfiguration Configure()
-        {
+        {  
             //TODO: Make all configuration work in the same way across Nether
             Console.WriteLine("Configuring WebJob (from Environment Variables");
 
-            s_webJobDashboardAndStorageConnectionString =
-                Environment.GetEnvironmentVariable("NETHER_WEBJOB_DASHBOARD_AND_STORAGE_CONNECTIONSTRING");
+            s_webJobDashboardAndStorageConnectionString = ConfigResolver.Resolve("NETHER_WEBJOB_DASHBOARD_AND_STORAGE_CONNECTIONSTRING");
             Console.WriteLine($"webJobDashboardAndStorageConnectionString:");
             Console.WriteLine($"  {s_webJobDashboardAndStorageConnectionString}");
 
-            s_ingestEventHubConnectionString =
-                Environment.GetEnvironmentVariable("NETHER_INGEST_EVENTHUB_CONNECTIONSTRING");
+            s_ingestEventHubConnectionString = ConfigResolver.Resolve("NETHER_INGEST_EVENTHUB_CONNECTIONSTRING");
             Console.WriteLine($"ingestEventHubConnectionString:");
             Console.WriteLine($"  {s_ingestEventHubConnectionString}");
 
-            s_ingestEventHubName =
-                Environment.GetEnvironmentVariable("NETHER_INGEST_EVENTHUB_NAME");
+            s_ingestEventHubName = ConfigResolver.Resolve("NETHER_INGEST_EVENTHUB_NAME");
             Console.WriteLine($"ingestEventHubName:");
             Console.WriteLine($"  {s_ingestEventHubName}");
 
@@ -78,5 +76,6 @@ namespace Nether.Analytics.EventProcessor
             Console.WriteLine(@"- Analytics Event Processor -");
             Console.WriteLine();
         }
+        
     }
 }
