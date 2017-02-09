@@ -10,9 +10,9 @@ namespace Nether.Analytics.EventProcessor
     // To learn more about Microsoft Azure WebJobs SDK, please see https://go.microsoft.com/fwlink/?LinkID=320976
     internal static class Program
     {
-        private static string _webJobDashboardAndStorageConnectionString;
-        private static string _ingestEventHubConnectionString;
-        private static string _ingestEventHubName;
+        private static string s_webJobDashboardAndStorageConnectionString;
+        private static string s_ingestEventHubConnectionString;
+        private static string s_ingestEventHubName;
 
         // Please set the following connection strings in app.config for this WebJob to run:
         // AzureWebJobsDashboard and AzureWebJobsStorage
@@ -32,27 +32,27 @@ namespace Nether.Analytics.EventProcessor
             //TODO: Make all configuration work in the same way across Nether
             Console.WriteLine("Configuring WebJob (from Environment Variables");
 
-            _webJobDashboardAndStorageConnectionString =
+            s_webJobDashboardAndStorageConnectionString =
                 Environment.GetEnvironmentVariable("NETHER_WEBJOB_DASHBOARD_AND_STORAGE_CONNECTIONSTRING");
             Console.WriteLine($"webJobDashboardAndStorageConnectionString:");
-            Console.WriteLine($"  {_webJobDashboardAndStorageConnectionString}");
+            Console.WriteLine($"  {s_webJobDashboardAndStorageConnectionString}");
 
-            _ingestEventHubConnectionString =
+            s_ingestEventHubConnectionString =
                 Environment.GetEnvironmentVariable("NETHER_INGEST_EVENTHUB_CONNECTIONSTRING");
             Console.WriteLine($"ingestEventHubConnectionString:");
-            Console.WriteLine($"  {_ingestEventHubConnectionString}");
+            Console.WriteLine($"  {s_ingestEventHubConnectionString}");
 
-            _ingestEventHubName =
+            s_ingestEventHubName =
                 Environment.GetEnvironmentVariable("NETHER_INGEST_EVENTHUB_NAME");
             Console.WriteLine($"ingestEventHubName:");
-            Console.WriteLine($"  {_ingestEventHubName}");
+            Console.WriteLine($"  {s_ingestEventHubName}");
 
             Console.WriteLine();
 
             // Setup Web Job Config
-            var jobHostConfig = new JobHostConfiguration(_webJobDashboardAndStorageConnectionString);
+            var jobHostConfig = new JobHostConfiguration(s_webJobDashboardAndStorageConnectionString);
             var eventHubConfig = new EventHubConfiguration();
-            eventHubConfig.AddReceiver(_ingestEventHubName, _ingestEventHubConnectionString);
+            eventHubConfig.AddReceiver(s_ingestEventHubName, s_ingestEventHubConnectionString);
 
             jobHostConfig.UseEventHub(eventHubConfig);
 
@@ -62,7 +62,6 @@ namespace Nether.Analytics.EventProcessor
             }
 
             return jobHostConfig;
-
         }
 
         private static void Greet()

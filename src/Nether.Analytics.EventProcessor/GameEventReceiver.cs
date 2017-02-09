@@ -14,7 +14,7 @@ namespace Nether.Analytics.EventProcessor
     /// </summary>
     public static class GameEventReceiver
     {
-        private static readonly GameEventRouter Router;
+        private static readonly GameEventRouter s_router;
 
         static GameEventReceiver()
         {
@@ -54,20 +54,20 @@ namespace Nether.Analytics.EventProcessor
             var handler = new GameEventHandler(blobOutputManager, eventHubOutputManager);
 
             // Configure Router to switch handeling to correct method depending on game event type
-            Router = new GameEventRouter(GameEventHandler.ResolveEventType,
+            s_router = new GameEventRouter(GameEventHandler.ResolveEventType,
                 GameEventHandler.UnknownGameEventFormatHandler,
                 GameEventHandler.UnknownGameEventTypeHandler,
                 handler.Flush);
 
-            Router.RegEventTypeAction("count", "1.0.0", handler.HandleCountEvent);
-            Router.RegEventTypeAction("game-heartbeat", "1.0.0", handler.HandleGameHeartbeat);
-            Router.RegEventTypeAction("game-start", "1.0.0", handler.HandleGameStartEvent);
-            Router.RegEventTypeAction("game-stop", "1.0.0", handler.HandleGameStopEvent);
-            Router.RegEventTypeAction("location", "1.0.0", handler.HandleLocationEvent);
-            Router.RegEventTypeAction("score", "1.0.0", handler.HandleScoreEvent);
-            Router.RegEventTypeAction("start", "1.0.0", handler.HandleStartEvent);
-            Router.RegEventTypeAction("stop", "1.0.0", handler.HandleStopEvent);
-            Router.RegEventTypeAction("generic", "1.0.0", handler.HandleGenericEvent);
+            s_router.RegEventTypeAction("count", "1.0.0", handler.HandleCountEvent);
+            s_router.RegEventTypeAction("game-heartbeat", "1.0.0", handler.HandleGameHeartbeat);
+            s_router.RegEventTypeAction("game-start", "1.0.0", handler.HandleGameStartEvent);
+            s_router.RegEventTypeAction("game-stop", "1.0.0", handler.HandleGameStopEvent);
+            s_router.RegEventTypeAction("location", "1.0.0", handler.HandleLocationEvent);
+            s_router.RegEventTypeAction("score", "1.0.0", handler.HandleScoreEvent);
+            s_router.RegEventTypeAction("start", "1.0.0", handler.HandleStartEvent);
+            s_router.RegEventTypeAction("stop", "1.0.0", handler.HandleStopEvent);
+            s_router.RegEventTypeAction("generic", "1.0.0", handler.HandleGenericEvent);
         }
 
 
@@ -85,10 +85,10 @@ namespace Nether.Analytics.EventProcessor
                 Console.WriteLine($"....Received batch of {events.Length} events");
             foreach (var e in events)
             {
-                Router.HandleGameEvent(e);
+                s_router.HandleGameEvent(e);
             }
 
-            Router.Flush();
+            s_router.Flush();
         }
     }
 }

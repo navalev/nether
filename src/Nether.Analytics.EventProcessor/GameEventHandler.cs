@@ -111,8 +111,8 @@ namespace Nether.Analytics.EventProcessor
         public static string ResolveEventType(string gameEvent)
         {
             var json = JObject.Parse(gameEvent);
-            var gameEventType = (string) json["type"];
-            var version = (string) json["version"];
+            var gameEventType = (string)json["type"];
+            var version = (string)json["version"];
 
             if (gameEventType == null || version == null)
                 throw new ApplicationException(

@@ -10,8 +10,8 @@ namespace AnalyticsTestClient.Utils
 {
     public static class EventHubManager
     {
-        private static EventHubClient _client;
-        private static string lastMsg;
+        private static EventHubClient s_client;
+        private static string s_lastMsg;
 
         static EventHubManager()
         {
@@ -21,31 +21,27 @@ namespace AnalyticsTestClient.Utils
                 EntityPath = ConfigCache.EventHubName
             };
 
-            _client = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
-
+            s_client = EventHubClient.CreateFromConnectionString(connectionStringBuilder.ToString());
         }
 
         public static async Task SendMessageToEventHub(string msg)
         {
-
             Console.WriteLine($"Sending message...");
             Console.WriteLine(msg);
-            await _client.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
+            await s_client.SendAsync(new EventData(Encoding.UTF8.GetBytes(msg)));
             Console.WriteLine("Message sent!");
-            lastMsg = msg;
+            s_lastMsg = msg;
         }
 
         public static async Task ReSendLastMessageToEventHub()
         {
-            if (!string.IsNullOrWhiteSpace(lastMsg))
-                await SendMessageToEventHub(lastMsg);
+            if (!string.IsNullOrWhiteSpace(s_lastMsg))
+                await SendMessageToEventHub(s_lastMsg);
         }
 
         public static async Task CloseConnectionToEventHub()
         {
-            await _client.CloseAsync();
+            await s_client.CloseAsync();
         }
-
-
     }
 }

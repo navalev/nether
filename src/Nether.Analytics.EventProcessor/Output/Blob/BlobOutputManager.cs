@@ -194,8 +194,8 @@ namespace Nether.Analytics.EventProcessor.Output.Blob
             var blobs = dir.ListBlobs();
 
             var lastBlobPath = (from b in blobs
-                orderby b.Uri.AbsolutePath descending
-                select b.Uri.AbsolutePath).FirstOrDefault();
+                                orderby b.Uri.AbsolutePath descending
+                                select b.Uri.AbsolutePath).FirstOrDefault();
 
             if (lastBlobPath == "")
                 return ""; // No blob found
