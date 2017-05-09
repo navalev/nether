@@ -43,10 +43,10 @@ namespace Nether.Data.InMemory.Leaderboard
         }
 
 
-        public override async Task<List<GameScore>> GetScoresAroundMeAsync(string gamertag, int radius)
+        public override async Task<List<GameScore>> GetScoresAroundMeAsync(string userId, int radius)
         {
             var scores = await GetRankedScoresAsync(); // Naive implementation
-            var gamerIndex = scores.FindIndex(s => s.Gamertag == gamertag);
+            var gamerIndex = scores.FindIndex(s => s.UserId == userId);
 
             int startIndex = Math.Max(0, gamerIndex - radius);
             int endIndex = Math.Min(scores.Count, gamerIndex + radius);
@@ -66,10 +66,10 @@ namespace Nether.Data.InMemory.Leaderboard
 
             // filter down to just the best score for each player
             var bestScoreList = scoresList
-                    .GroupBy(s => s.Gamertag)
+                    .GroupBy(s => s.UserId)
                     .Select(g => new
                     {
-                        Gamertag = g.Key,
+                        UserId = g.Key,
                         CustomTag = "TODO",// We haven't factored custom tags into the scores yet
                         Score = g.Max(s => s.Score),
                     });
@@ -79,7 +79,7 @@ namespace Nether.Data.InMemory.Leaderboard
                     .OrderByDescending(s => s.Score)
                     .Select((s, index) => new
                     {
-                        s.Gamertag,
+                        s.UserId,
                         s.CustomTag,
                         s.Score,
                         RowNumber = index + 1
@@ -92,14 +92,14 @@ namespace Nether.Data.InMemory.Leaderboard
                 {
                     Score = g.Key,
                     StartRank = g.First().RowNumber,
-                    Players = g.OrderBy(s => s.Gamertag)
+                    Players = g.OrderBy(s => s.UserId)
                 });
 
             // now unroll the groups applying the rank
             return groupedScores.SelectMany(g => g.Players.Select(p => new GameScore
             {
                 Rank = g.StartRank,
-                Gamertag = p.Gamertag,
+                UserId = p.UserId,
                 Score = p.Score,
                 CustomTag = p.CustomTag
             })).ToList();

@@ -15,14 +15,14 @@ namespace Nether.Data.Sql.Leaderboard.Migrations
                 name: "Ranks",
                 columns: table => new
                 {
-                    Gamertag = table.Column<string>(nullable: false),
+                    UserId = table.Column<string>(nullable: false),
                     CustomTag = table.Column<string>(nullable: true),
                     Ranking = table.Column<long>(nullable: false),
                     Score = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ranks", x => x.Gamertag);
+                    table.PrimaryKey("PK_Ranks", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,7 +32,7 @@ namespace Nether.Data.Sql.Leaderboard.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     CustomTag = table.Column<string>(maxLength: 50, nullable: true),
                     DateAchieved = table.Column<DateTime>(nullable: false),
-                    Gamertag = table.Column<string>(maxLength: 50, nullable: false),
+                    UserId = table.Column<string>(maxLength: 50, nullable: false),
                     Score = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -41,14 +41,14 @@ namespace Nether.Data.Sql.Leaderboard.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Scores_DateAchieved_Gamertag_Score",
+                name: "IX_Scores_DateAchieved_UserId_Score",
                 table: "Scores",
-                columns: new[] { "DateAchieved", "Gamertag", "Score" });
+                columns: new[] { "DateAchieved", "UserId", "Score" });
 
 
             migrationBuilder.Sql(@"
 CREATE PROCEDURE [dbo].[GetPlayerRank]
-	@Gamertag NVARCHAR(50),
+	@UserId NVARCHAR(50),
 	@Rank INT OUTPUT
 AS
 SET @Rank = -1
@@ -57,14 +57,14 @@ SELECT
 	@Rank = Ranking
 FROM (
 	SELECT
-		Gamertag,
+		UserId,
 		MAX(Score) AS Score,
 		MAX(CustomTag) AS CustomTag,
 		RANK() OVER (ORDER BY MAX(Score) DESC) AS Ranking
 	FROM Scores
-	GROUP BY Gamertag
+	GROUP BY UserId
 ) AS T
-WHERE Gamertag = @Gamertag
+WHERE UserId = @UserId
 
 RETURN 0
 ");
@@ -76,26 +76,26 @@ CREATE PROCEDURE [dbo].[GetHighScores]
 AS
 SELECT
 	Score,
-	Gamertag,
+	UserId,
 	CustomTag,
 	Ranking
 FROM
 	(SELECT
 		Score,
-		Gamertag,
+		UserId,
 		CustomTag,
 		RANK() OVER(ORDER BY Score DESC) AS Ranking
 		FROM (
 			SELECT
-				Gamertag,
+				UserId,
 				MAX(Score) AS Score,
 				MAX(CustomTag) AS CustomTag
 			FROM Scores
-			GROUP BY GamerTag
+			GROUP BY UserId
 		) AS T
 	) AS T2
 WHERE Ranking BETWEEN @StartRank AND (@StartRank + @Count)
-ORDER BY Ranking, GamerTag
+ORDER BY Ranking, UserId
 RETURN 0
 ");
 
@@ -103,18 +103,18 @@ RETURN 0
             migrationBuilder.Sql(@"
 CREATE PROCEDURE[dbo].[GetScoresAroundPlayer]
 
-    @Gamertag NVARCHAR(50),
+    @UserId NVARCHAR(50),
 	@Radius INT
 AS
 DECLARE @PlayerRank int
 
-EXEC GetPlayerRank @Gamertag, @PlayerRank OUTPUT
+EXEC GetPlayerRank @UserId, @PlayerRank OUTPUT
 
 IF(@PlayerRank >= 0)
 BEGIN
     SELECT
 
-        Gamertag,
+        UserId,
         Score,
         CustomTag,
         Ranking
@@ -122,24 +122,24 @@ BEGIN
     FROM(
         SELECT
 
-            Gamertag,
+            UserId,
             MAX(Score) AS Score,
             MAX(CustomTag) AS CustomTag,
             RANK() OVER(ORDER BY MAX(Score) DESC) AS Ranking
 
         FROM Scores
 
-        GROUP BY GamerTag
+        GROUP BY UserId
     ) AS T
 
     WHERE Ranking BETWEEN(@PlayerRank - @Radius) AND(@PlayerRank + @Radius)
 
-    ORDER BY Ranking, GamerTag
+    ORDER BY Ranking, UserId
 END
 ELSE
 BEGIN
     SELECT
-        Gamertag = NULL,
+        UserId = NULL,
         Score = NULL,
         CustomTag = NULL,
         Ranking = NULL
