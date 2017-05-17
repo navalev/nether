@@ -18,14 +18,9 @@ namespace Nether.Analytics.SqlDatabase
             _connectionString = connectionString;
             _tableName = tableName;
 
-            _context = new SqlMessageContext<T>(_connectionString, _tableName);
-            _context.Database.EnsureCreated();
+            _context = new SqlMessageContext<T>(_connectionString, _tableName);         
         }
-
-        private void EnsureCreated()
-        {                    
-        }        
-
+      
         public Task FlushAsync()
         {
             return Task.CompletedTask;
