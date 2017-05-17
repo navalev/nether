@@ -5,29 +5,29 @@ using System.Text;
 
 namespace Nether.Analytics.SqlDatabase
 {
-    class SqlMessageContext : DbContext
+    class SqlMessageContext<T> : DbContext where T : class, IMessage
     {
         private readonly string _connectionString;
         private readonly string _tableName;
 
-        public DbSet<MessageValue> Messages { get; set; }
+        public DbSet<T> Messages { get; set; }
 
         public SqlMessageContext(string connectionString, string tableName)
         {
             _connectionString = connectionString;
-            _tableName = tableName;            
-        }
+            _tableName = tableName;
+        }       
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<MessageValue>()
+            builder.Entity<T>()
                 .HasKey(c => c.Id);
 
-            builder.Entity<MessageValue>().Property(m => m.Id).HasValueGenerator<Microsoft.EntityFrameworkCore.ValueGeneration.GuidValueGenerator>();
+            builder.Entity<T>().Property(m => m.Id).HasValueGenerator<Microsoft.EntityFrameworkCore.ValueGeneration.GuidValueGenerator>();
 
-            builder.Entity<MessageValue>()
+            builder.Entity<T>()
                 .ForSqlServerToTable(_tableName);            
         }
 

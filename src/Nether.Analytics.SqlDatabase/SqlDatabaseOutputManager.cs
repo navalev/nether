@@ -1,21 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Nether.Analytics.SqlDatabase
 {
-    public class SqlDatabaseOutputManager : IOutputManager
+    public class SqlDatabaseOutputManager<T> : IOutputManager where T : class, IMessage
     {
-        private SqlMessageContext _context;        
+        private SqlMessageContext<T> _context;
+        private string _connectionString;
+        private string _tableName;              
 
-        // table structure:
-        // ID  | MessageId  | Property | Value 
         public SqlDatabaseOutputManager(string connectionString, string tableName)
-        {            
-            _context = new SqlMessageContext(connectionString, tableName);
+        {
+            _connectionString = connectionString;
+            _tableName = tableName;
+
+            _context = new SqlMessageContext<T>(_connectionString, _tableName);
             _context.Database.EnsureCreated();
         }
+
+        private void EnsureCreated()
+        {                    
+        }        
 
         public Task FlushAsync()
         {
@@ -24,15 +33,18 @@ namespace Nether.Analytics.SqlDatabase
 
         public async Task OutputMessageAsync(string pipelineName, int idx, Message msg)
         {
-            
-            foreach (string key in msg.Properties.Keys)
-            {
-                var value = msg.Properties[key];
-
-                await _context.Messages.AddAsync(new MessageValue { MessageId = msg.Id, Property = key, Value = value });
-                await _context.SaveChangesAsync();
-            }
-            
+            T obj = CreateMessageObject(msg);
+            await _context.Messages.AddAsync(obj);
+            await _context.SaveChangesAsync();           
         }
-    }
+
+        private T CreateMessageObject(Message msg)
+        {
+            T obj =  (T)Activator.CreateInstance(typeof(T));
+            obj.SetProperties(msg.Properties);
+            return obj;
+        }
+       
+    }        
 }
+
