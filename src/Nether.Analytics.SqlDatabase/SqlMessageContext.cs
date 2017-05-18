@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Nether.Analytics.SqlDatabase
 {
-    class SqlMessageContext<T> : DbContext where T : SqlMessageBase
+    internal class SqlMessageContext<T> : DbContext where T : SqlMessageBase
     {
         private readonly string _connectionString;
         private readonly string _tableName;
@@ -16,15 +19,15 @@ namespace Nether.Analytics.SqlDatabase
         {
             _connectionString = connectionString;
             _tableName = tableName;
-        }       
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<T>().HasKey(c => c.Id);            
+            builder.Entity<T>().HasKey(c => c.Id);
             builder.Entity<T>().Property(m => m.Id).HasValueGenerator<Microsoft.EntityFrameworkCore.ValueGeneration.GuidValueGenerator>();
-            builder.Entity<T>().ForSqlServerToTable(_tableName);            
+            builder.Entity<T>().ForSqlServerToTable(_tableName);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
@@ -32,6 +35,5 @@ namespace Nether.Analytics.SqlDatabase
             base.OnConfiguring(builder);
             builder.UseSqlServer(_connectionString);
         }
-
     }
 }

@@ -1,14 +1,17 @@
-﻿using System;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Nether.Analytics.SqlDatabase
-{   
+{
     /// <summary>
     /// This is a sample implemetation for Geo hash message type, for the SqlMessageBase abstract class
     /// </summary>
     public class SqlMessage : SqlMessageBase
-    {                    
+    {
         public string Type { get; set; }
         public string Version { get; set; }
         public string EnqueueTimeUtc { get; set; }
@@ -19,7 +22,7 @@ namespace Nether.Analytics.SqlDatabase
         public string GeoHashPrecision { get; set; }
         public string GeoHashCenterLat { get; set; }
         public string GeoHashCenterLon { get; set; }
-        public string Rnd { get; set; }           
+        public string Rnd { get; set; }
 
         public override void SetProperties(Dictionary<string, string> properties)
         {
