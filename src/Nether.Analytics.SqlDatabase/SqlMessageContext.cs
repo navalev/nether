@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nether.Analytics.SqlDatabase
 {
-    class SqlMessageContext<T> : DbContext where T : class, ISqlMessage
+    class SqlMessageContext<T> : DbContext where T : SqlMessageBase
     {
         private readonly string _connectionString;
         private readonly string _tableName;
@@ -22,13 +22,9 @@ namespace Nether.Analytics.SqlDatabase
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<T>()
-                .HasKey(c => c.Id);
-
+            builder.Entity<T>().HasKey(c => c.Id);            
             builder.Entity<T>().Property(m => m.Id).HasValueGenerator<Microsoft.EntityFrameworkCore.ValueGeneration.GuidValueGenerator>();
-
-            builder.Entity<T>()
-                .ForSqlServerToTable(_tableName);            
+            builder.Entity<T>().ForSqlServerToTable(_tableName);            
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)

@@ -5,12 +5,10 @@ using System.Text;
 namespace Nether.Analytics.SqlDatabase
 {   
     /// <summary>
-    /// This is a sample ISqlMessage implemetation for geohash message type.    
+    /// This is a sample implemetation for Geo hash message type, for the SqlMessageBase abstract class
     /// </summary>
-    public class SqlMessage : ISqlMessage
-    {            
-        public Guid Id { get; set; }
-        public string MessageId { get; set; }
+    public class SqlMessage : SqlMessageBase
+    {                    
         public string Type { get; set; }
         public string Version { get; set; }
         public string EnqueueTimeUtc { get; set; }
@@ -21,32 +19,10 @@ namespace Nether.Analytics.SqlDatabase
         public string GeoHashPrecision { get; set; }
         public string GeoHashCenterLat { get; set; }
         public string GeoHashCenterLon { get; set; }
-        public string Rnd { get; set; }
+        public string Rnd { get; set; }           
 
-        public string GetCreateTableSql(string tableName)
+        public override void SetProperties(Dictionary<string, string> properties)
         {
-
-            string createSql = "IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='" + tableName + "') " +
-                        "CREATE TABLE " + tableName + " ( " +
-                        "\"Id\" uniqueidentifier not null," +
-                        "\"MessageId\" varchar(50)," +
-                        "\"Type\" varchar(50), " +
-                        "\"Version\" varchar(50), " +
-                        "\"EnqueueTimeUtc\" varchar(50)," +
-                        "\"GamesessionId\" varchar(50)," +
-                        "\"Lat\" varchar(50), " +
-                        "\"Lon\" varchar(50)," +
-                        "\"GeoHash\" varchar(50)," +
-                        "\"GeoHashPrecision\" varchar(50)," +
-                        "\"GeoHashCenterLat\" varchar(50)," +
-                        "\"GeoHashCenterLon\" varchar(50)," +
-                        "\"Rnd\" varchar(50))";
-
-            return createSql;
-        }
-
-        public void SetProperties(Dictionary<string, string> properties)
-        {            
             MessageId = properties["id"];
             Type = properties["type"];
             Version = properties["version"];
@@ -60,7 +36,5 @@ namespace Nether.Analytics.SqlDatabase
             GeoHashCenterLon = properties["geoHashCenterLon"];
             Rnd = properties["rnd"];
         }
-
-        
     }
 }
