@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nether.Analytics.SqlDatabase
 {
-    class SqlMessageContext<T> : DbContext where T : class, IMessage
+    class SqlMessageContext<T> : DbContext where T : class, ISqlMessage
     {
         private readonly string _connectionString;
         private readonly string _tableName;

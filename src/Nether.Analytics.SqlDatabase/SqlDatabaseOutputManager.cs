@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Nether.Analytics.SqlDatabase
 {
-    public class SqlDatabaseOutputManager<T> : IOutputManager where T : class, IMessage
+    public class SqlDatabaseOutputManager<T> : IOutputManager where T : class, ISqlMessage
     {
-        private SqlMessageContext<T> _context;
+        private static SqlMessageContext<T> _context;
         private string _connectionString;
         private string _tableName;     
         
@@ -21,7 +21,10 @@ namespace Nether.Analytics.SqlDatabase
                 if (_context == null)
                 {
                     _context = new SqlMessageContext<T>(_connectionString, _tableName);
-                    _context.Database.Migrate();
+
+                    //T obj = (T)Activator.CreateInstance(typeof(T));                    
+                    //_context.Database.ExecuteSqlCommand(obj.GetCreateTableSql(_tableName));
+                    _context.Database.EnsureCreated();
                 }
                 return _context;
             }
@@ -39,8 +42,9 @@ namespace Nether.Analytics.SqlDatabase
         }
 
         public async Task OutputMessageAsync(string pipelineName, int idx, Message msg)
-        {            
-            T obj = CreateMessageObject(msg);
+        {
+            //T obj = CreateMessageObject(msg);
+            var obj = new SqlMessage();
             await Context.Messages.AddAsync(obj);
             await Context.SaveChangesAsync();           
         }
