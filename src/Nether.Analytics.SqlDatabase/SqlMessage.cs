@@ -26,7 +26,7 @@ namespace Nether.Analytics.SqlDatabase
             Type = properties["type"];
             Version = properties["version"];
             EnqueueTimeUtc = properties["enqueueTimeUtc"];
-            GamesessionId = properties["gameSessionId"];
+            GamesessionId = properties["gameSession"];
             Lat = properties["lat"];
             Lon = properties["lon"];
             GeoHash = properties["geoHash"];
