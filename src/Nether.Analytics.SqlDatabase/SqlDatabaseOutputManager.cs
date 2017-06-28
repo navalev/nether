@@ -4,6 +4,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
@@ -23,8 +24,19 @@ namespace Nether.Analytics.SqlDatabase
             {
                 if (s_context == null)
                 {
-                    s_context = new SqlMessageContext<T>(_connectionString, _tableName);
+                    s_context = new SqlMessageContext<T>(_connectionString, _tableName);                    
                     s_context.Database.EnsureCreated();
+
+                    try
+                    {
+                        // create table if does not exist
+                        T obj = (T)Activator.CreateInstance(typeof(T));
+                        s_context.Database.ExecuteSqlCommand(obj.GetCreateTableQuery(_tableName));
+                    }
+                    catch (SqlException e)
+                    {
+                        // failed becasue the table already exist - continue
+                    }
                 }
                 return s_context;
             }
@@ -34,25 +46,25 @@ namespace Nether.Analytics.SqlDatabase
         {
             _connectionString = connectionString;
             _tableName = tableName;
-        }
-
-        public Task FlushAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        public async Task OutputMessageAsync(string pipelineName, int idx, Message msg)
-        {
-            T obj = CreateMessageObject(msg);
-            await Context.Messages.AddAsync(obj);
-            await Context.SaveChangesAsync();
-        }
-
+        }       
+        
         private T CreateMessageObject(Message msg)
         {
             T obj = (T)Activator.CreateInstance(typeof(T));
             obj.SetProperties(msg.Properties);
             return obj;
+        }
+
+        public async Task OutputMessageAsync(string partitionId, string pipelineName, int index, Message msg)
+        {
+            T obj = CreateMessageObject(msg);            
+            await Context.Messages.AddAsync(obj);
+            await Context.SaveChangesAsync();            
+        }
+
+        public Task FlushAsync(string partitionId)
+        {
+            return Task.CompletedTask;
         }
     }
 }

@@ -17,5 +17,8 @@ namespace Nether.Analytics.SqlDatabase
 
         // set the object properties values from the message properties
         public abstract void SetProperties(Dictionary<string, string> properties);
+
+        // return a query to create a sql table for the message if the table *does not exist*
+        public abstract string GetCreateTableQuery(string tableName);        
     }
 }

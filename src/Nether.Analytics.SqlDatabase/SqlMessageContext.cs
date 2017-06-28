@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Nether.Analytics.SqlDatabase
 {
@@ -35,5 +36,6 @@ namespace Nether.Analytics.SqlDatabase
             base.OnConfiguring(builder);
             builder.UseSqlServer(_connectionString);
         }
+        
     }
 }
