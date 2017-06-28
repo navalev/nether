@@ -28,7 +28,7 @@ namespace Nether.Analytics.SqlDatabase
         public override string GetCreateTableQuery(string tableName)
         {
             return string.Format("create table {0} (Id varchar(100), MessageId varchar(100), Type varchar(100),  Version varchar(100), EnqueuedTimeUtc varchar(100), GameSession varchar(100), Lat varchar(100), Lon varchar(100), GeoHash varchar(100), GeoHashPrecision varchar(100), GeoHashCenterLat varchar(100), GeoHashCenterLon varchar(100), GeoHashCenterDist varchar(100), Rnd varchar(100))",
-                tableName);           
+                tableName);
         }
 
         public override void SetProperties(Dictionary<string, string> properties)

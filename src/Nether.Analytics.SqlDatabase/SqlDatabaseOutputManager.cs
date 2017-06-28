@@ -24,7 +24,7 @@ namespace Nether.Analytics.SqlDatabase
             {
                 if (s_context == null)
                 {
-                    s_context = new SqlMessageContext<T>(_connectionString, _tableName);                    
+                    s_context = new SqlMessageContext<T>(_connectionString, _tableName);
                     s_context.Database.EnsureCreated();
 
                     try
@@ -46,8 +46,8 @@ namespace Nether.Analytics.SqlDatabase
         {
             _connectionString = connectionString;
             _tableName = tableName;
-        }       
-        
+        }
+
         private T CreateMessageObject(Message msg)
         {
             T obj = (T)Activator.CreateInstance(typeof(T));
@@ -57,9 +57,9 @@ namespace Nether.Analytics.SqlDatabase
 
         public async Task OutputMessageAsync(string partitionId, string pipelineName, int index, Message msg)
         {
-            T obj = CreateMessageObject(msg);            
+            T obj = CreateMessageObject(msg);
             await Context.Messages.AddAsync(obj);
-            await Context.SaveChangesAsync();            
+            await Context.SaveChangesAsync();
         }
 
         public Task FlushAsync(string partitionId)

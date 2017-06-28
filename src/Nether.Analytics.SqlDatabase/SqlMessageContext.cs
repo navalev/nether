@@ -36,6 +36,5 @@ namespace Nether.Analytics.SqlDatabase
             base.OnConfiguring(builder);
             builder.UseSqlServer(_connectionString);
         }
-        
     }
 }
