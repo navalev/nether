@@ -1,4 +1,7 @@
-﻿using Microsoft.Azure.EventHubs.Processor;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.Azure.EventHubs.Processor;
 using Nether.EventHubs;
 using Nether.Ingest;
 using Nether.Cosmos;
@@ -65,10 +68,10 @@ namespace Nether.Demo.Leaderboard
             var scoreSerializer = new CsvMessageFormatter("id", "type", "version", "enqueuedTimeUtc", "gameId", "userId", "score");
 
             builder.Pipeline("default-leaderboard")
-                .HandlesMessageType("score", 1, 0)               
-                .OutputTo(new DefaultLeaderboardCosmosDBOutputManager(scoreSerializer, 
-                                                                      Config.Root[Config.NLB_COSMOS_DB_URL], 
-                                                                      Config.Root[Config.NLB_COSMOS_DB_KEY], 
+                .HandlesMessageType("score", 1, 0)
+                .OutputTo(new DefaultLeaderboardCosmosDBOutputManager(scoreSerializer,
+                                                                      Config.Root[Config.NLB_COSMOS_DB_URL],
+                                                                      Config.Root[Config.NLB_COSMOS_DB_KEY],
                                                                       Config.Root[Config.NLB_DB_NAME]));
 
             // Build all pipelines
@@ -80,7 +83,7 @@ namespace Nether.Demo.Leaderboard
             // The following method will never exit
             await messageProcessor.ProcessAndBlockAsync();
         }
-        
+
 
         private Task OnMessageProcessorInfoAsync(MessageProcessorInformation info)
         {

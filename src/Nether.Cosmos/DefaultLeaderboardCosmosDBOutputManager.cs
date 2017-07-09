@@ -1,4 +1,7 @@
-﻿using Microsoft.Azure.Documents;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Nether.Ingest;
 using Newtonsoft.Json;
@@ -11,29 +14,29 @@ namespace Nether.Cosmos
 {
     public class DefaultLeaderboardCosmosDBOutputManager : IOutputManager
     {
-        private CsvMessageFormatter scoreSerializer;
-        private string databaseName;
-        private DocumentClient client;
+        private CsvMessageFormatter _scoreSerializer;
+        private string _databaseName;
+        private DocumentClient _client;
 
         private const string allScoresCollectionName = "AllScoresCollection";
 
         public DefaultLeaderboardCosmosDBOutputManager(CsvMessageFormatter scoreSerializer, string cosmosDbUrl, string cosmosDbKey, string databaseName)
         {
-            this.scoreSerializer = scoreSerializer;
-            this.databaseName = databaseName;
+            _scoreSerializer = scoreSerializer;
+            _databaseName = databaseName;
 
-            client = new DocumentClient(new Uri(cosmosDbUrl), cosmosDbKey);
+            _client = new DocumentClient(new Uri(cosmosDbUrl), cosmosDbKey);
             init();
         }
 
         private void init()
         {
             // Create the database
-            client.CreateDatabaseIfNotExistsAsync(new Database() { Id = databaseName }).GetAwaiter().GetResult();
+            _client.CreateDatabaseIfNotExistsAsync(new Database() { Id = _databaseName }).GetAwaiter().GetResult();
 
             // Create the collections
-            client.CreateDocumentCollectionIfNotExistsAsync(
-                UriFactory.CreateDatabaseUri(databaseName),
+            _client.CreateDocumentCollectionIfNotExistsAsync(
+                UriFactory.CreateDatabaseUri(_databaseName),
                 new DocumentCollection { Id = allScoresCollectionName }).
                 GetAwaiter()
                 .GetResult();
@@ -46,11 +49,14 @@ namespace Nether.Cosmos
 
         public async Task OutputMessageAsync(string partitionId, string pipelineName, int index, Message msg)
         {
-            ScoreDocument score = new ScoreDocument { GameId = msg.Properties["gameId"],
-                                                      UserId = msg.Properties["userId"],
-                                                      Score = Int32.Parse(msg.Properties["score"]) };
+            ScoreDocument score = new ScoreDocument
+            {
+                GameId = msg.Properties["gameId"],
+                UserId = msg.Properties["userId"],
+                Score = Int32.Parse(msg.Properties["score"])
+            };
 
-            await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, allScoresCollectionName), score);
+            await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseName, allScoresCollectionName), score);
         }
     }
 
@@ -59,7 +65,7 @@ namespace Nether.Cosmos
         [JsonProperty(PropertyName = "id")]
         public string Id { get; set; }
         public string GameId { get; set; }
-        public string UserId { get; set; }       
+        public string UserId { get; set; }
         public int Score { get; set; }
     }
 }

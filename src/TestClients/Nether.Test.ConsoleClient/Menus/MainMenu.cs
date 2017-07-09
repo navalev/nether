@@ -11,7 +11,7 @@ namespace Nether.Test.ConsoleClient
     public class MainMenu : ConsoleMenu
     {
         private IAnalyticsClient _client;
-        private static Random randonScore = new Random();
+        private static Random s_randonScore = new Random();
 
         public MainMenu(IAnalyticsClient client)
         {
@@ -45,7 +45,7 @@ namespace Nether.Test.ConsoleClient
                     version = "1.0.0",
                     gameId = $"{i % 2}",
                     userId = gamerTagProvider.GetGamerTag(),
-                    score = randonScore.Next(0, 1000)
+                    score = s_randonScore.Next(0, 1000)
                 };
                 // Serialize object to JSON
                 var json = JsonConvert.SerializeObject(message);
@@ -66,7 +66,7 @@ namespace Nether.Test.ConsoleClient
         public string type { get; set; }
         public string version { get; set; }
         public string gameId { get; set; }
-        public string userId { get; set; }        
+        public string userId { get; set; }
         public int score { get; set; }
     }
 }
