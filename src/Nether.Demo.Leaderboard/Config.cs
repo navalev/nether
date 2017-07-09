@@ -28,7 +28,10 @@ namespace Nether.Demo.Leaderboard
         public const string NAH_EHLISTENER_EVENTHUBPATH = "NAH_EHLISTENER_EVENTHUBPATH";
         public const string NAH_EHLISTENER_CONSUMERGROUP = "NAH_EHLISTENER_CONSUMERGROUP";
         public const string NAH_EHLISTENER_STORAGECONNECTIONSTRING = "NAH_EHLISTENER_STORAGECONNECTIONSTRING";
-        public const string NAH_EHLISTENER_LEASECONTAINERNAME = "NAH_EHLISTENER_LEASECONTAINERNAME";        
+        public const string NAH_EHLISTENER_LEASECONTAINERNAME = "NAH_EHLISTENER_LEASECONTAINERNAME";
+        public const string NLB_COSMOS_DB_URL = "NLB_COSMOS_DB_URL";
+        public const string NLB_COSMOS_DB_KEY = "NLB_COSMOS_DB_KEY";
+        public const string NLB_DB_NAME = "NLB_DB_NAME";
 
         private static void SetupConfigurationProviders()
         {
@@ -58,7 +61,10 @@ namespace Nether.Demo.Leaderboard
                 NAH_EHLISTENER_EVENTHUBPATH,
                 NAH_EHLISTENER_CONSUMERGROUP,
                 NAH_EHLISTENER_STORAGECONNECTIONSTRING,
-                NAH_EHLISTENER_LEASECONTAINERNAME              
+                NAH_EHLISTENER_LEASECONTAINERNAME,
+                NLB_COSMOS_DB_URL,
+                NLB_COSMOS_DB_KEY,
+                NLB_DB_NAME
             };
 
             const int maxValueLengthPrinted = 100;

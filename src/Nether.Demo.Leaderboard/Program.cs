@@ -66,7 +66,10 @@ namespace Nether.Demo.Leaderboard
 
             builder.Pipeline("default-leaderboard")
                 .HandlesMessageType("score", 1, 0)               
-                .OutputTo(new DefaultLeaderboardCosmosDBOutputManager(scoreSerializer));
+                .OutputTo(new DefaultLeaderboardCosmosDBOutputManager(scoreSerializer, 
+                                                                      Config.Root[Config.NLB_COSMOS_DB_URL], 
+                                                                      Config.Root[Config.NLB_COSMOS_DB_KEY], 
+                                                                      Config.Root[Config.NLB_DB_NAME]));
 
             // Build all pipelines
             var router = builder.Build();
