@@ -67,12 +67,25 @@ namespace Nether.Demo.Leaderboard
             // setup leaderboard pipeline
             var scoreSerializer = new CsvMessageFormatter("id", "type", "version", "enqueuedTimeUtc", "gameId", "userId", "score");
 
-            builder.Pipeline("default-leaderboard")
+            // default leaderboard stores all scores to a collection in cosmos db
+            builder.Pipeline("all-scores-leaderboard")
+                .HandlesMessageType("score", 1, 0)              
+                .OutputTo(new CosmosDBOutputManager(Config.Root[Config.NLB_COSMOS_DB_URL],
+                                                    Config.Root[Config.NLB_COSMOS_DB_KEY],
+                                                    Config.Root[Config.NLB_DB_NAME],
+                                                    "AllScoresCollection",
+                                                    new AllScoresOutputProcessor()));
+
+
+            // top scors leaderboard stores top score per user to a collection in cosmos db
+            builder.Pipeline("top-scores-leaderboard")
                 .HandlesMessageType("score", 1, 0)
-                .OutputTo(new DefaultLeaderboardCosmosDBOutputManager(scoreSerializer,
-                                                                      Config.Root[Config.NLB_COSMOS_DB_URL],
-                                                                      Config.Root[Config.NLB_COSMOS_DB_KEY],
-                                                                      Config.Root[Config.NLB_DB_NAME]));
+                .OutputTo(new CosmosDBOutputManager(Config.Root[Config.NLB_COSMOS_DB_URL],
+                                                    Config.Root[Config.NLB_COSMOS_DB_KEY],
+                                                    Config.Root[Config.NLB_DB_NAME],
+                                                    "TopScoresCollection",
+                                                    new TopScoresOutputProcessor()));
+
 
             // Build all pipelines
             var router = builder.Build();
