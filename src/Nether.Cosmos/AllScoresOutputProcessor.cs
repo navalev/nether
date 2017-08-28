@@ -1,4 +1,7 @@
-﻿using Microsoft.Azure.Documents.Client;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.Azure.Documents.Client;
 using Nether.Ingest;
 using Newtonsoft.Json;
 using System;
@@ -16,7 +19,7 @@ namespace Nether.Cosmos
 
         public async Task ProcessMessage(Message msg)
         {
-            ScoreDocument score = new ScoreDocument { UserId = msg.Properties["userId"], Score = Convert.ToInt32(msg.Properties["score"])};
+            ScoreDocument score = new ScoreDocument { UserId = msg.Properties["userId"], Score = Convert.ToInt32(msg.Properties["score"]) };
             await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseName, _collectionName), score);
         }
 

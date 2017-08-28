@@ -69,7 +69,7 @@ namespace Nether.Demo.Leaderboard
 
             // default leaderboard stores all scores to a collection in cosmos db
             builder.Pipeline("all-scores-leaderboard")
-                .HandlesMessageType("score", 1, 0)              
+                .HandlesMessageType("score", 1, 0)
                 .OutputTo(new CosmosDBOutputManager(Config.Root[Config.NLB_COSMOS_DB_URL],
                                                     Config.Root[Config.NLB_COSMOS_DB_KEY],
                                                     Config.Root[Config.NLB_DB_NAME],

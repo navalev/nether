@@ -1,4 +1,7 @@
-﻿using Microsoft.Azure.Documents;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Nether.Ingest;
 using System;
@@ -22,7 +25,7 @@ namespace Nether.Cosmos
         {
             _databaseName = databaseName;
             _collectionName = collectionName;
-           
+
             _client = new DocumentClient(new Uri(cosmosDbUrl), cosmosDbKey);
 
             _outputPrcoessor = outputProcessor;
@@ -51,7 +54,7 @@ namespace Nether.Cosmos
 
         public async Task OutputMessageAsync(string partitionId, string pipelineName, int index, Message msg)
         {
-            await _outputPrcoessor.ProcessMessage(msg);            
+            await _outputPrcoessor.ProcessMessage(msg);
         }
     }
 }

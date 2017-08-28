@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,20 +47,18 @@ namespace Nether.Cosmos
                 }
             }
             else
-            {              
+            {
                 // update the saved score for user with the new top score                
                 queryScores.Score = score.Score;
                 await _client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(_databaseName, _collectionName, queryScores.Id), queryScores);
             }
-            
         }
-       
+
         public void Set(string databaseName, string collectionName, DocumentClient client)
         {
             _databaseName = databaseName;
             _collectionName = collectionName;
             _client = client;
         }
-        
-    }   
+    }
 }
