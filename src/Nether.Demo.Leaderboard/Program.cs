@@ -57,7 +57,7 @@ namespace Nether.Demo.Leaderboard
 
             // Setup Message Parser. By default we are using Nether JSON Messages
             // Setting up parser that knows how to parse those messages.
-            var parser = new EventHubListenerMessageJsonParser(new ConsoleCorruptMessageHandler()) { AllowDbgEnqueuedTime = true };
+            var parser = new EventHubListenerMessageJsonParser() { AllowDbgEnqueuedTime = true };
 
             // User a builder to create routing infrastructure for messages and the pipelines
             var builder = new MessageRouterBuilder();
